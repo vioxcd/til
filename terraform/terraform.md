@@ -6,6 +6,7 @@
 2. Easily replicates infrastructure (for multiple environments workflow)
 3. Useful for stack-based deployments
 4. State-based approach to track resource changes throughout life-cycle
+5. Idempotency
 
 ## [Fundamental concepts](https://learn.hashicorp.com/collections/terraform/cli) (see the *fundamentals* aside)
 
@@ -24,7 +25,13 @@
 - `terraform`
 - `providers`
 - `resources`
+- `data`
+- `output`
 - `variables` and `locals`
+
+[Quick terminology overview](https://github.com/AdminTurnedDevOps/Terraform-The-Hard-Way/blob/main/The-Basics/terraform-theory.md)
+
+[Syntax analogy](https://youtu.be/9zhdCehQWRk?t=410): the provider block is like importing library, resources and data block is like using functions that is provided by the library (with its prefix too) along with their respective arguments. locals are constants, variables are for values known before runtime, output are for values known at runtime, data are used for values defined in separate terraform configuration.
 
 ## [A simple workflow for deployments](https://www.cloudskillsboost.google/focuses/15842?parent=catalog)
 
@@ -66,9 +73,46 @@ OR
 
 You can pass a `credentials` property to the provider block.
 
+Side note for authorization: make sure that the credentials you passed in have the authority to create resources using terraform.
+
 ## Configuration Language
 
 - Use a `variables.tf` file to create constant (a `locals` block) and variable values that can be referenced in the `main.tf` file
 - Provide `default` property to variables that can be used across projects, also if you don't provide one, it'll ask for the value at runtime
+- Use a `terraform-dev.tfvars`, `terraform-stage.tfvars`, etc. to set multiple different environments value. Pass the `-ver-file` flag to `terraform apply` to use the custom-named `tfvars` file
+- Use a service account to manage terraform resources and set it from environment variables. See more [here](https://youtu.be/ObAF5VUbagg)
+
+## Logic
+
+I'm not really diving into the data types or logical operations that HCL offers, though I see that in case there's a need to provision dozens of servers and roles, those construct might be useful
+
+## Additional Readings
+
+1. [A Month of Terraform](https://jeremywsherman.com/blog/2020/11/21/a-month-of-terraform/) by Jeremy W. Sherman
+    - As I've heard from others, there's docs for most things and the terraform book was pretty good
+    - Heads-up: he's using the v0.\* terraform and I wonder how much has changed since then (`terraform-lsp`, secrets management, and testing)
+    - The inconsistencies and asymmetries looks annoying
+    - More points made by others on [HN](https://news.ycombinator.com/item?id=25180355)
+        - `Terragrunt` and `tfenv` for secrets
+        - `Pulumi` might be an alternative
+        - `for_each` trick works w/ v0.13 and since v0.12 double quotes aren't needed (though, maybe kept for compatibility w/ v0.11)
+        - Other provides have better docs than AWS (?)
+        - people have been comparing it to `CloudFormation` and having a good time w/ terraform (though, with problems of its own)
+2. Difference between `variables.tf` and `terraform.tfvars` on [stackoverflow](https://stackoverflow.com/a/56099677/8996974)
+    - `variables.tf` file is used to **define the variables type** and optionally **set a default value**
+    - `terraform.tfvars` file is used to **set the actual values** of the variables
+3. Test your terraform configuration with [checkov](https://github.com/bridgecrewio/checkov) (see this [video](https://youtu.be/Nx4NFQhXgE4))
 
 ## References
+
+- [Introductory practice on Qwiklabs](https://www.cloudskillsboost.google/quests/159)
+- [Advanced usage practice on Qwiklabs](https://www.cloudskillsboost.google/quests/44)
+- [Belajar Terraform untuk Pemula - Giri Kuncoro](https://youtube.com/playlist?list=PL4SGTPmSY0qngs44Ssc0RHO9h4fmZ9JUb)
+- [The Hard Way](https://github.com/AdminTurnedDevOps/Terraform-The-Hard-Way)
+- [Comprehensive Guide - Medium](https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca)
+- [Same as above, but repository](https://github.com/gruntwork-io/intro-to-terraform)
+- [Terraform Best Practices - Techworld with Nana](https://www.youtube.com/watch?v=gxPykhPxRW0) 
+- [Best Practices - Hashicorp](https://youtu.be/9c0s93GcXVw) 
+- [More Best Practices](https://github.com/antonbabenko/terraform-best-practices) 
+- [IaC Tutorial - Artem; inspired by Kelsey's Kubernetes the Hard Way](https://github.com/Artemmkin/infrastructure-as-code-tutorial) 
+- [Terraform Up & Running repo (check first which tf version is used, tho)](https://github.com/brikis98/terraform-up-and-running-code/tree/3rd-edition) 
