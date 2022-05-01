@@ -79,7 +79,7 @@ Side note for authorization: make sure that the credentials you passed in have t
 
 - Use a `variables.tf` file to create constant (a `locals` block) and variable values that can be referenced in the `main.tf` file
 - Provide `default` property to variables that can be used across projects, also if you don't provide one, it'll ask for the value at runtime
-- Use a `terraform-dev.tfvars`, `terraform-stage.tfvars`, etc. to set multiple different environments value. Pass the `-ver-file` flag to `terraform apply` to use the custom-named `tfvars` file
+- Use a `terraform-dev.tfvars`, `terraform-stage.tfvars`, etc. to set multiple different environments value. Pass the `-var-file` flag to `terraform apply` to use the custom-named `tfvars` file
 - Use a service account to manage terraform resources and set it from environment variables. See more [here](https://youtu.be/ObAF5VUbagg)
 
 ## Logic
@@ -91,10 +91,10 @@ I'm not really diving into the data types or logical operations that HCL offers,
 1. [A Month of Terraform](https://jeremywsherman.com/blog/2020/11/21/a-month-of-terraform/) by Jeremy W. Sherman
     - As I've heard from others, there's docs for most things and the terraform book was pretty good
     - Heads-up: he's using the v0.\* terraform and I wonder how much has changed since then (`terraform-lsp`, secrets management, and testing)
-    - The inconsistencies and asymmetries looks annoying
+    - Agree that the inconsistencies and asymmetries looks annoying
     - More points made by others on [HN](https://news.ycombinator.com/item?id=25180355)
-        - `Terragrunt` and `tfenv` for secrets
-        - `Pulumi` might be an alternative
+        - [Terragrunt](https://github.com/gruntwork-io/terragrunt) and `tfenv` for secrets
+        - [Pulumi](https://github.com/pulumi/pulumi) might be an alternative
         - `for_each` trick works w/ v0.13 and since v0.12 double quotes aren't needed (though, maybe kept for compatibility w/ v0.11)
         - Other provides have better docs than AWS (?)
         - people have been comparing it to `CloudFormation` and having a good time w/ terraform (though, with problems of its own)
